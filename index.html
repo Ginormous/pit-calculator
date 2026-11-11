@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>pitcalculator.com</title>
+<link href="data:image/x-icon;base64,AAABAAEAEBAQAAAAAAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAi///AP///wATdtwAADw8AAv//wATotsACWC6AABQUAAArq4AAN7eAACGhgAQYbcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIRAAAAAAAAIacREAAAAAIZpM3dEQAAIZlmqozPERAgRWaqqozN3SCGhu7qqqjNIKhERG7uqqkiiIhEREbu7QIiFIhEREVgAAAiIUhoVgAAAAACIhVgAAAAAAAAIgAAAAAAAAAAAAAAAAAAAAAAAD//wAA//8AAOP/AADAfwAAgA8AAAABAAAAAAAAAAAAAAAAAAAAAAAAgAEAAPADAAD+BwAA/88AAP//AAD//wAA" rel="icon" type="image/x-icon">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3efe6;--panel:#fffaf0;--ink:#2a2118;--mute:#6f6354;--line:#d9ceb8;--gold:#b8860b;--on:#2a2118;--onink:#ffd75e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c1712;--panel:#262019;--ink:#f1e8d6;--mute:#a89b85;--line:#41372b;--gold:#ffc83d;--on:#ffc83d;--onink:#1c1712}}
+:root[data-theme="dark"]{--bg:#1c1712;--panel:#262019;--ink:#f1e8d6;--mute:#a89b85;--line:#41372b;--gold:#ffc83d;--on:#ffc83d;--onink:#1c1712}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Rubik,system-ui,Arial,sans-serif;line-height:1.45}
+main{max-width:760px;margin:0 auto;padding:20px 16px 40px}
+h1{font-weight:800;font-size:1.7rem;margin:0 0 4px}
+.sub{color:var(--mute);margin:0 0 18px}
+.result{position:sticky;top:env(safe-area-inset-top,0px);background:var(--on);color:var(--onink);border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.big{font-size:2.2rem;font-weight:800}
+.small{font-size:.9rem;opacity:.85}
+section{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-top:14px}
+h2{font-size:1rem;margin:0 0 2px}
+.hint{color:var(--mute);font-size:.85rem;margin:0 0 10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+
+/* Compact Renown Gold Boost buttons */
+#rgb{
+  flex-wrap:nowrap;
+  gap:5px;
+}
+
+#rgb{
+  flex-wrap:nowrap;
+  gap:5px;
+}
+
+#rgb .chip{
+  flex-shrink:0;
+  font-size:.9rem;
+  padding:8.5px 11.5px;
+}
+
+button.chip{font:inherit;padding:7px 12px;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;cursor:pointer}
+button.chip[aria-pressed="true"]{background:var(--on);color:var(--onink);border-color:var(--on);font-weight:600}
+button.chip:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+label{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+input[type=number],input[type=text]{font:inherit;width:96px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);text-align:center}
+.field{display:grid;grid-template-columns:1fr 96px;gap:12px;align-items:center;margin-top:10px}
+.field label{display:block}
+.rows{margin-top:10px;font-size:.9rem;color:var(--mute)}
+.rows div{display:flex;justify-content:space-between;border-top:1px dashed var(--line);padding:4px 0}
+.rows b{color:var(--ink)}
+</style>
+</head>
+<body>
+<main>
+<h1>Gold Calculator</h1>
+
+<div class="result" role="status" aria-live="polite">
+  <div><div class="big" id="per">10g</div><div class="small">per kill</div></div>
+</div>
+
+<section>
+  <h2>Gold Boost</h2>
+  <p class="hint" style="margin:0 0 10px">&nbsp;</p>
+  <div class="chips" id="gbp"></div>
+</section>
+
+<section>
+  <h2>Renown Gold Boost</h2>
+  <p class="hint" style="margin:0 0 10px">&nbsp;</p>
+  <div class="chips" id="rgb"></div>
+</section>
+
+<section>
+  <h2>Celebrity</h2>
+  <p class="hint" style="margin:0 0 10px">&nbsp;</p>
+  <div class="chips"><button class="chip" id="celeb" aria-pressed="false">Celebrity +100%</button></div>
+</section>
+
+<section>
+  <h2>Mystic Enchants</h2>
+
+  <p class="hint" style="margin-top:10px"><b>Moctezuma</b></p>
+  <div class="chips" id="moc"></div>
+
+  <p class="hint" style="margin-top:10px"><b>Gold Boost</b></p>
+  <div class="chips" id="enc"></div>
+
+  <p class="hint" style="margin-top:10px"><b>Gold Bump</b></p>
+  <div class="chips" id="bump"></div>
+
+  <p class="hint" style="margin-top:10px"><b>Pit MBA</b></p>
+  <div class="chips" id="mba"></div>
+</section>
+
+<section>
+  <h2>Perks</h2>
+  <div class="chips">
+    <button class="chip" id="spam" aria-pressed="false">Spammer +200%</button>
+    <button class="chip" id="atts" aria-pressed="false">Assistant to the Streaker +2g</button>
+  </div>
+</section>
+
+<section>
+  <h2>Megastreaks</h2>
+  <p class="hint" style="margin:0 0 10px">&nbsp;</p>
+  <div class="chips" id="mega"></div>
+</section>
+
+<section>
+  <h2>Killstreaks</h2>
+  <p class="hint" style="margin:0 0 10px">&nbsp;</p>
+  <div class="chips" id="ks"></div>
+</section>
+
+<section>
+  <h2>Events</h2>
+  <p class="hint" style="margin:0 0 10px">&nbsp;</p>
+  <div class="chips" id="ev"></div>
+</section>
+
+<section>
+  <h2>Extras</h2>
+  <p class="hint" style="margin:0 0 10px">&nbsp;</p>
+
+  <div class="field"><label for="stack">Gold Stack (0.5g + 0.1g/prestige, max 5.5g)</label><input type="text" inputmode="decimal" id="stack" maxlength="3" autocomplete="off" value="0"></div>
+  <div class="field"><label for="genesis">Genesis (Demon faction, +0.2g/claim, max 15g)</label><input type="text" inputmode="numeric" id="genesis" maxlength="2" autocomplete="off" value="0"></div>
+  <div class="rows" id="rows"></div>
+</section>
+</main>
+
+<script>
+(function(){
+  var S={mode:'mul',gbp:0,rgb:0,mega:'none',ks:'none',enc:0,mba:0,moc:0,bump:0,oneup:false,gato:false,celeb:false,f3:false,spam:false,atts:false,ev:'none'};
+  var KS={none:[0,0,''],gapple:[0,5,'Second Gapple'],arq:[0,7,'Arquebusier'],khan:[8,0,'Khanate']};
+  var MEGA=[['none','N/A',0],['over','Overdrive +100%',100],['beast','Beastmode +75%',75],['high','Highlander +110%',110]];
+  var $=function(i){return document.getElementById(i)};
+
+  function chips(id,items,key){
+    var box=$(id);
+    items.forEach(function(it){
+      var b=document.createElement('button');
+      b.className='chip';b.textContent=it[1];b.dataset.v=it[0];
+      b.onclick=function(){S[key]=it[0];paint(id,key);calc()};
+      box.appendChild(b);
+    });
+    paint(id,key);
+  }
+
+  function paint(id,key){
+    [].forEach.call($(id).children,function(b){
+      var v=b.dataset.v;
+      b.setAttribute('aria-pressed',String(String(S[key])===v));
+    });
+  }
+
+  chips('gbp',[[0,'N/A'],[10,'I +10%'],[20,'II +20%'],[30,'III +30%'],[40,'IV +40%'],[50,'V +50%'],[60,'VI +60%']],'gbp');
+
+  var r=[];
+  for(var i=1;i<=10;i++)r.push([i*2.5,'+'+(i*2.5)+'%']);
+  chips('rgb',r,'rgb');
+
+  chips('mega',MEGA.map(function(m){return [m[0],m[1]]}),'mega');
+
+  chips('ks',[
+    ['none','N/A'],
+    ['gapple','Second Gapple +5g / 3 kills'],
+    ['arq','Arquebusier +7g / 3 kills'],
+    ['khan','Khanate +8g / kill']
+  ],'ks');
+
+  chips('moc',[[0,'0'],[6,'1 +6g'],[12,'2 +12g'],[18,'3 +18g'],[24,'4 +24g'],[30,'5 +30g'],[36,'6 +36g']],'moc');
+
+  chips('enc',[[0,'0'],[15,'1 +15%'],[30,'2 +30%'],[45,'3 +45%'],[60,'4 +60%'],[75,'5 +75%'],[90,'6 +90%']],'enc');
+
+  chips('bump',[[0,'0'],[4,'1 +4g'],[8,'2 +8g'],[12,'3 +12g'],[16,'4 +16g'],[20,'5 +20g'],[24,'6 +24g']],'bump');
+
+  chips('mba',[[0,'0'],[10,'1 +10%'],[30,'2 +30%'],[50,'3 +50%']],'mba');
+
+  chips('ev',[['none','N/A'],['x2','2x Rewards +100%'],['koth','King of the Hill +300%']],'ev');
+
+  $('celeb').onclick=function(){S.celeb=!S.celeb;this.setAttribute('aria-pressed',String(S.celeb));calc()};
+  $('spam').onclick=function(){S.spam=!S.spam;this.setAttribute('aria-pressed',String(S.spam));calc()};
+  $('atts').onclick=function(){S.atts=!S.atts;this.setAttribute('aria-pressed',String(S.atts));calc()};
+
+  function guard(id,re,max){
+    var el=$(id),prev='0';
+    el.addEventListener('input',function(){
+      var v=el.value.replace(/^0+(?=\d)/,'');
+      if(v===''||(re.test(v)&&parseFloat(v)<=max)){prev=v;el.value=v}else{el.value=prev}
+      calc();
+    });
+    el.addEventListener('blur',function(){
+      if(el.value===''){el.value='0';prev='0'}
+      calc();
+    });
+    el.addEventListener('focus',function(){el.select()});
+  }
+  guard('stack',/^\d(\.\d?)?$/,5.5);
+  guard('genesis',/^\d{1,2}$/,15);
+
+  function num(id,max){
+    var v=parseFloat($(id).value);
+    if(isNaN(v)||v<0)v=0;
+    return max!=null?Math.min(v,max):v;
+  }
+
+  function fmt(n){
+    return (Math.round(n*100)/100).toLocaleString('en-US');
+  }
+
+  function calc(){
+    var parts=[];
+
+    if(S.celeb)parts.push(['Celebrity',100]);
+    if(S.ev==='x2')parts.push(['2x Rewards',100]);
+    if(S.ev==='koth')parts.push(['King of the Hill',300]);
+    if(S.gbp)parts.push(['Gold Boost passive',S.gbp]);
+    if(S.rgb)parts.push(['Renown Gold Boost',S.rgb]);
+
+    var e=S.enc;
+    if(e)parts.push(['Gold Boost enchant',e]);
+
+    var m=S.mba;
+    if(m)parts.push(['Pit MBA',m]);
+
+    var mg=MEGA.filter(function(x){return x[0]===S.mega})[0];
+    if(mg[2])parts.push([mg[1].split(' +')[0],mg[2]]);
+
+    var base=10+S.moc+S.bump+num('stack',5.5)+num('genesis',15)*0.2+(S.atts?2:0)+(S.spam?20:0),mult;
+
+    if(S.mode==='add'){
+      mult=1+parts.reduce(function(a,p){return a+p[1]},0)/100;
+    }else{
+      mult=parts.reduce(function(a,p){return a*(1+p[1]/100)},1);
+    }
+
+    var kk=KS[S.ks];
+    var flat=0;
+    var k=1;
+    var periodic=kk[1];
+    var CAP=2500,total=0,capped=0;
+
+    for(var i=1;i<=k;i++){
+      var b=base+kk[0]+kk[1];
+      var g=b*mult+flat;
+      if(g>CAP){g=CAP;capped++}
+      total+=g;
+    }
+
+    var per=total/k;
+    $('per').textContent=fmt(per)+'g';
+
+    var h='<div><span>Base kill'+(base+kk[0]>10?' (incl. flat perks)':'')+'</span><b>'+fmt(base+kk[0])+'g</b></div>';
+
+    parts.forEach(function(p){
+      h+='<div><span>'+p[0]+'</span><b>+'+p[1]+'%</b></div>';
+    });
+
+    h+='<div><span>Total multiplier</span><b>×'+fmt(mult)+'</b></div>';
+
+    if(capped)h+='<div><span>Capped at 2,500g</span><b>yes</b></div>';
+
+    if(periodic)h+='<div><span>'+kk[2]+' (base)</span><b>+'+fmt(periodic)+'g</b></div>';
+
+    $('rows').innerHTML=h;
+  }
+
+  calc();
+})();
+</script>
+</body>
+</html>
