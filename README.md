@@ -1,8 +1,9 @@
 # Hypixel Pit Gold Calculator
 
-Work out exactly how much gold you earn per kill in Hypixel Pit, based on your **mystic enchants**, **perks**, **streaks**, and other upgrades.
+Work out exactly how much gold you earn per kill in Hypixel Pit, based on your mystic enchants, perks, streaks, and other upgrades.
 
-**Try it:** [pitcalculator.com](https://pitcalculator.com/)
+**Try it:** 
+[pitcalculator.com](https://pitcalculator.com/)
 
 ## Credits
 
