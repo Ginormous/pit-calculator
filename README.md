@@ -7,4 +7,4 @@ Work out exactly how much gold you earn per kill in Hypixel Pit, based on your m
 
 ## Credits
 
-Thanks to [pit.wiki](https://pit.wiki) for helping with the gold values
+Thanks to [pit.wiki](https://pit.wiki/) for helping with the gold values
